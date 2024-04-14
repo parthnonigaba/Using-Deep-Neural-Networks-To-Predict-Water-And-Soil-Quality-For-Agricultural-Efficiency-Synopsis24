@@ -1,5 +1,5 @@
 # Using-Deep-Neural-Networks-To-Predict-Water-And-Soil-Quality-For-Agricultural-Efficiency-Synopsis24
-#Introduction:
+Introduction:
 Many parts of the world are suffering from acute shortage of fresh water supply especially India which has 18% of the world’s population and only 4% of the freshwater resources. Kanna Nova in her research paper “ An analysis of system components and interdependencies for water conservation “ proposes that AI can help predict water demand more accurately and hence reduce waste. I built on her work further to use a set of machine learning models to accomplish two things farmers can greatly benefit from:
 Using the temperature readings at 30-150cm at 30 cm increments I can classify water moisture levels in different regions of a farm and adjust water allocation 
 By using pH level, electrical conductivity, and chemical content( Na, K, Mg)  I can grade water quality and determine the best crop and soil type for the water to be used based on the water available at the farm.
