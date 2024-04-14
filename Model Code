@@ -1,0 +1,400 @@
+#mounting goole drive for later use
+from google.colab import drive
+drive.mount("/content/gdrive")
+
+import pandas as pd
+import seaborn as sn
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+from sklearn import neighbors
+import math
+import os
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+model = nn.Sequential(
+    nn.Linear(5, 12),
+    nn.ReLU(),
+    nn.Linear(12, 50),
+    nn.ReLU(),
+    nn.Linear(50, 100),
+    nn.ReLU(),
+    nn.Linear(100, 200),
+    nn.ReLU(),
+    nn.Linear(200, 500),
+    nn.ReLU(),
+    nn.Linear(500, 200),
+    nn.ReLU(),
+    nn.Linear(200, 5),
+    nn.Sigmoid())
+
+import pandas as pd
+import seaborn as sn
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+from sklearn import neighbors
+import math
+import os
+
+# getting the data from google drive
+folder_name="/content/gdrive/MyDrive/Science Fair Coding/"
+fol=os.listdir(folder_name)
+fol.sort()
+res1=[42]
+res2=[42]
+
+# Loading the dataset files and performing cleanup***(why are there so many files used when only one it drive)
+file1=open(folder_name+'CAF310.txt','r')
+file2=open('CAF310_clean.csv','w')
+
+for line1 in file1:
+    if('NA' not in line1):
+        file2.write(line1.replace("\t",","))
+
+file1.close()
+file2.close()
+
+file3=open('CAF310_clean.csv','r')
+file4=open('CAF310_train.csv','w')
+file5=open('CAF310_validation.csv','w')
+file6=open('CAF310_test.csv','w')
+
+titles=file3.readline()
+count=0
+#putting titles for data
+file4.write(titles)
+file5.write(titles)
+file6.write(titles)
+
+# adding each line in file 3(clean data) to files 4,5,6(splitting up data so no files are too big)
+for line3 in file3:
+    if(count<15857):
+        file4.write(line3)
+    elif((count>15856)& (count<31712)):
+        file5.write(line3)
+    else:
+        file6.write(line3)
+
+    count+=1
+
+file3.close()
+file4.close()
+file5.close()
+file6.close()
+
+
+
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+
+
+# load the dataset, split into input (X) and output (y) variables
+data_train=pd.read_csv("CAF310_train.csv")
+data_test=pd.read_csv("CAF310_test.csv")
+
+#VW stands for volumetric water readings and T stands for temperature water readings
+
+#loading and setting the 30 cm deep values
+data_train["T_30cm"] = pd.to_numeric(data_train['T_30cm'])
+data_train["VW_30cm"] = pd.to_numeric(data_train['VW_30cm'])
+data_test["T_30cm"] = pd.to_numeric(data_test['T_30cm'])
+data_test["VW_30cm"] = pd.to_numeric(data_test['VW_30cm'])
+
+X1=data_train[["T_30cm"]].to_numpy()
+y1=data_train["VW_30cm"].to_numpy()
+T1=data_test[["T_30cm"]].to_numpy()
+U1=data_test["VW_30cm"].to_numpy()
+
+#loading and setting the 60 cm deep values
+data_train["T_60cm"] = pd.to_numeric(data_train['T_60cm'])
+data_train["VW_60cm"] = pd.to_numeric(data_train['VW_60cm'])
+data_test["T_30cm"] = pd.to_numeric(data_test['T_60cm'])
+data_test["VW_60cm"] = pd.to_numeric(data_test['VW_60cm'])
+
+X2=data_train[["T_60cm"]].to_numpy()
+y2=data_train["VW_60cm"].to_numpy()
+T2=data_test[["T_60cm"]].to_numpy()
+U2=data_test["VW_60cm"].to_numpy()
+
+#loading and setting the 90 cm deep values
+data_train["T_90cm"] = pd.to_numeric(data_train['T_90cm'])
+data_train["VW_90cm"] = pd.to_numeric(data_train['VW_90cm'])
+data_test["T_90cm"] = pd.to_numeric(data_test['T_90cm'])
+data_test["VW_90cm"] = pd.to_numeric(data_test['VW_90cm'])
+
+X3=data_train[["T_90cm"]].to_numpy()
+y3=data_train["VW_90cm"].to_numpy()
+T3=data_test[["T_90cm"]].to_numpy()
+U3=data_test["VW_90cm"].to_numpy()
+
+#loading and setting the 120 cm deep values
+data_train["T_120cm"] = pd.to_numeric(data_train['T_120cm'])
+data_train["VW_120cm"] = pd.to_numeric(data_train['VW_120cm'])
+data_test["T_120cm"] = pd.to_numeric(data_test['T_120cm'])
+data_test["VW_120cm"] = pd.to_numeric(data_test['VW_120cm'])
+
+X4=data_train[["T_120cm"]].to_numpy()
+y4=data_train["VW_120cm"].to_numpy()
+T4=data_test[["T_120cm"]].to_numpy()
+U4=data_test["VW_120cm"].to_numpy()
+
+#loading and setting the 150 cm deep values
+data_train["T_150cm"] = pd.to_numeric(data_train['T_150cm'])
+data_train["VW_150cm"] = pd.to_numeric(data_train['VW_150cm'])
+data_test["T_150cm"] = pd.to_numeric(data_test['T_150cm'])
+data_test["VW_150cm"] = pd.to_numeric(data_test['VW_150cm'])
+
+X5=data_train[["T_150cm"]].to_numpy()
+y5=data_train["VW_150cm"].to_numpy()
+T5=data_test[["T_150cm"]].to_numpy()
+U5=data_test["VW_150cm"].to_numpy()
+
+#reshaping all the x,y,and t values
+X1=X1[0:5000]
+y1=y1[0:5000].reshape(-1,1)
+T1=T1[0:5000]
+U1=U1[0:5000].reshape(-1,1)
+
+X2=X2[0:5000]
+y2=y2[0:5000].reshape(-1,1)
+T2=T2[0:5000]
+U2=U2[0:5000].reshape(-1,1)
+
+X3=X3[0:5000]
+y3=y3[0:5000].reshape(-1,1)
+T3=T3[0:5000]
+U3=U3[0:5000].reshape(-1,1)
+
+X4=X4[0:5000]
+y4=y4[0:5000].reshape(-1,1)
+T4=T4[0:5000]
+U4=U4[0:5000].reshape(-1,1)
+
+X5=X5[0:5000]
+y5=y5[0:5000].reshape(-1,1)
+T5=T5[0:5000]
+U5=U5[0:5000].reshape(-1,1)
+
+#merging all the different x, y, and test values together
+X = np.concatenate((X1,X2,X3,X4,X5),1)
+y = np.concatenate((y1,y2,y3,y4,y5),1)
+T = np.concatenate((T1,T2,T3,T4,T5),1)
+U = np.concatenate((U1,U2,U3,U4,U5),1)
+
+print("Input data labels: ")
+print(X[:20])
+print(y[:20])
+
+# converting the x and y values to tensor
+X = torch.tensor(X, dtype=torch.float32)
+y = torch.tensor(y, dtype=torch.float32)
+T = torch.tensor(T, dtype=torch.float32)
+U = torch.tensor(U, dtype=torch.float32)
+
+
+
+#making the model with all its layers
+
+model = nn.Sequential(
+    nn.Linear(5, 12),
+    nn.ReLU(),
+    nn.Linear(12, 50),
+    nn.ReLU(),
+    nn.Linear(50, 100),
+    nn.ReLU(),
+    nn.Linear(100, 200),
+    nn.ReLU(),
+    nn.Linear(200, 500),
+    nn.ReLU(),
+    nn.Linear(500, 200),
+    nn.ReLU(),
+    nn.Linear(200, 5),
+    nn.Sigmoid())
+
+
+loss_fn = nn.MSELoss()  # setting binary cross entropy as loss function
+optimizer = optim.Adam(model.parameters(), lr=0.001)# a standard ml optimizer that is used to help learn the weights(lr=learning rate)
+
+#setting number of epochs, batch size, and initializing average loss(used for testing)
+n_epochs = 100
+batch_size = 5
+average_loss = 0
+
+"""
+      training model and printing latest loss
+
+      inputs
+      n_epochs: amount of times it will run
+      batch size: the amount of data you train at a time
+      X: input data from dataset
+
+      outputs
+      loss: estimates the difference between prediction and actual dataset
+"""
+for epoch in range(n_epochs):
+    for i in range(0, len(X), batch_size):
+        Xbatch = X[i:i+batch_size]
+        y_pred = model(Xbatch)
+        ybatch = y[i:i+batch_size]
+        loss = loss_fn(y_pred, ybatch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    average_loss += loss
+    print(f'Finished epoch {epoch}, latest loss {loss}')
+
+
+# compute accuracy (no_grad is optional) no grad means that you will not train in this section
+with torch.no_grad():
+    y_pred = model(X)
+
+
+
+# make class predictions with the model***
+predictions = (model(X) > 0.5).int()
+
+
+print(average_loss)
+
+PATH = "/content/gdrive/MyDrive/Soil Moisture Model/soilmoisture.pt"
+torch.save(model,PATH)
+
+val1 = 0
+val2 = 1
+val3 = 2
+val4 = 3
+val5 = 4
+
+PATH = "/content/gdrive/MyDrive/Soil Moisture Model/soilmoisture.pt"
+model = torch.load(PATH)
+model.eval()
+
+print("Input Temperature readings at 30 cm depth (C) 9.6")
+print("Input Temperature readings at 60 cm depth (C) 8.9")
+print("Input Temperature readings at 90 cm depth (C) 8.4")
+print("Input Temperature readings at 120 cm depth (C) 7.7")
+print("Input Temperature readings at 150 cm depth (C) 6.7")
+
+inputs = [9.6,8.9,8.4,7.7,6.7]
+if inputs[0] > inputs[1] and inputs[1] > inputs[2] and inputs[2] > inputs[3] and inputs[3] > inputs[4]:
+        print("")
+
+
+else:
+  test = inputs.copy()
+  tester = inputs.copy()
+  tester.sort()
+
+  test_index = []
+  for x in tester:
+      test_index.insert(0,test.index(x))
+      test[test.index(x)] = -1
+
+  val1 = test_index[0]
+  val2 = test_index[1]
+  val3 = test_index[2]
+  val4 = test_index[3]
+  val5 = test_index[4]
+
+
+
+
+inputparam = torch.tensor(inputs, dtype=torch.float32)
+y_test = model(inputparam)
+
+m = nn.Softmax(dim = 0)
+prob = ((y_test)).tolist()
+
+
+
+#print()
+#print(prob)
+#print()
+#predictions = (y_test > 0.5).int()
+#loss = loss_fn(y_test, U)
+#print(loss)
+#print()
+
+print('Based on input values of tempratutres at 30,60,90,120 and 150 degree Celcius the moisture level at these depths are as follows: ')
+print('---------------------------------------------------------------------------------------------------------------------------------')
+print()
+print('Volumetric water readings at 30 cm depth (m^3/m^3) : ' , round(float((prob[val1])),4))
+print('Volumetric water readings at 60 cm depth (m^3/m^3): ' , round(float((prob[val2])),4))
+print('Volumetric water readings at 90 cm depth (m^3/m^3): ' , round(float((prob[val3])),4))
+print('Volumetric water readings at 120 cm depth (m^3/m^3): ' , round(float((prob[val4])),4))
+print('Volumetric water readings at 150 cm depth (m^3/m^3): ' , round(float((prob[val5])),4))
+print()
+print('---------------------------------------------------------------------------------------------------------------------------------')
+
+
+val1 = 0
+val2 = 1
+val3 = 2
+val4 = 3
+val5 = 4
+
+PATH = "/content/gdrive/MyDrive/Soil Moisture Model/soilmoisture.pt"
+model = torch.load(PATH)
+model.eval()
+
+print("Input Temperature readings at 30 cm depth (C) 8.5")
+print("Input Temperature readings at 60 cm depth (C) 8.7")
+print("Input Temperature readings at 90 cm depth (C) 7.9")
+print("Input Temperature readings at 120 cm depth (C) 7.8")
+print("Input Temperature readings at 150 cm depth (C) 7.6")
+
+inputs = [8.5,8.7,7.9,7.8,7.6]
+
+if inputs[0] > inputs[1] and inputs[1] > inputs[2] and inputs[2] > inputs[3] and inputs[3] > inputs[4]:
+        print("")
+
+
+else:
+  test = inputs.copy()
+  tester = inputs.copy()
+  tester.sort()
+
+  test_index = []
+  for x in tester:
+    test_index.insert(0,test.index(x))
+    test[test.index(x)] = -1
+
+  val1 = test_index[0]
+  val2 = test_index[1]
+  val3 = test_index[2]
+  val4 = test_index[3]
+  val5 = test_index[4]
+
+inputparam = torch.tensor(inputs, dtype=torch.float32)
+y_test = model(inputparam)
+
+m = nn.Softmax(dim = 0)
+prob = (m(y_test)).tolist()
+
+
+
+#print()
+#print(prob)
+#print()
+#predictions = (y_test > 0.5).int()
+#loss = loss_fn(y_test, U)
+#print(loss)
+#print()
+
+print('Based on input values of tempratutres at 30,60,90,120 and 150 degree Celcius the moisture level at these depths are as follows: ')
+print('---------------------------------------------------------------------------------------------------------------------------------')
+print()
+print('Volumetric water readings at 30 cm depth (m^3/m^3) : ' , round(float((prob[val1])),4))
+print('Volumetric water readings at 60 cm depth (m^3/m^3): ' , round(float((prob[val2])),4))
+print('Volumetric water readings at 90 cm depth (m^3/m^3): ' , round(float((prob[val3])),4))
+print('Volumetric water readings at 120 cm depth (m^3/m^3): ' , round(float((prob[val4])),4))
+print('Volumetric water readings at 150 cm depth (m^3/m^3): ' , round(float((prob[val5])),4))
+print()
+print('---------------------------------------------------------------------------------------------------------------------------------')
