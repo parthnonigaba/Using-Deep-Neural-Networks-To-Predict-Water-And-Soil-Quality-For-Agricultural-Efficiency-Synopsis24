@@ -1,0 +1,1 @@
+# Using-Deep-Neural-Networks-To-Predict-Water-And-Soil-Quality-For-Agricultural-Efficiency-Synopsis24
